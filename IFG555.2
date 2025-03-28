@@ -1,0 +1,153 @@
+This C# console application was developed to manage contestant data for the annual Queensland Idol Competition. The program streamlines the registration and classification of contestants by talent type and provides statistical insights based on historical participation data.
+
+Features:
+Prompts user input for the number of contestants in last year’s and this year’s competition (0–30 range).
+Displays meaningful feedback on how this year’s competition compares to the previous year (e.g., growth or decline).
+Collects contestant names and validates talent codes:
+
+S – Singing
+D – Dancing
+M – Musical Instrument
+O – Other
+
+Displays a count of contestants by talent type.
+Allows dynamic lookup of contestants by talent code.
+Includes input validation and user-friendly messaging throughout.
+
+This project showcases my ability to apply core programming principles—such as control flow, loops, conditionals, arrays/lists, and input validation—to solve a real-world scenario. It was created as part of a term-long software development assignment for demonstrating applied C# skills.
+
+using System;
+
+namespace Contestants
+{
+    class Program
+    {
+
+        public static void Main()
+
+        {
+            //part1
+            Console.WriteLine("please enter number of last year's contestants:");
+
+            int lastYear = int.Parse(Console.ReadLine());
+            while (lastYear > 30 || lastYear < 0)
+
+            {
+                Console.WriteLine("Invalid value, please enter number between 0-30");
+                lastYear = int.Parse(Console.ReadLine());
+
+            }
+
+            Console.WriteLine("Contestants in last year's competition is {0}", lastYear);
+
+            Console.WriteLine("please enter number of this year's contestants:");
+
+            int thisYear = int.Parse(Console.ReadLine());
+            while (thisYear > 30 || thisYear < 0)
+
+            {
+                Console.WriteLine("Invalid value, please enter number between 0-30");
+                thisYear = int.Parse(Console.ReadLine());
+
+            }
+
+            Console.WriteLine("Contestants in this year's competition is {0}", thisYear);
+
+            //part2
+            Console.WriteLine("Contestants this year equals {0} & contestants last year equals {1}", thisYear, lastYear);
+
+            //part3
+            if (thisYear > lastYear + lastYear)
+                Console.WriteLine("The competition is more than twice as big as last year!");
+            else if (thisYear >= lastYear)
+                Console.WriteLine("the competition is bigger than ever!");
+            if (thisYear < lastYear)
+                Console.WriteLine("A tighter race this year, come out and cast your vote!");
+
+            
+
+            //part4
+            Console.WriteLine("codes for talent types are S = singing, D = dancing, M = musical O = other");
+
+            char[] contestants = { 'S', 'D', 'M', 'O' };
+            string[] names = new String[thisYear];
+            char[] codes = new char[thisYear];
+
+
+            for (int i = 0; i < thisYear; i++)
+
+            {
+                Console.Write("Contestant name: ");
+                names[i] = Console.ReadLine();
+
+                char enteredCode;
+                Console.WriteLine("Enter contestant code");
+                enteredCode = Convert.ToChar(Console.ReadLine());
+                while (contestants.Contains(enteredCode) == false)
+                {
+                    Console.WriteLine("code not valid, Please input again");
+                    Console.WriteLine("Enter contestant code");
+                    enteredCode = Convert.ToChar(Console.ReadLine());
+                }
+
+                codes[i] = enteredCode;
+            }
+
+            //part5
+            int[] count = new int[contestants.Length];
+            List<string>[] groupByCode = new List<string>[contestants.Length];
+            for (int i = 0; i < contestants.Length; i++)
+            {
+                groupByCode[i] = new List<string>();
+            }
+
+            for (int i = 0; i < contestants.Length; i++)
+            {
+                char code = contestants[i];
+
+                count[i] = 0;
+                for (int j = 0; j < thisYear; j++)
+                {
+                    if (code == codes[j])
+                    {
+                        count[i]++;
+                        groupByCode[i].Add(names[j]);
+                    }
+                }
+            }
+
+            // display staticstics
+            Console.WriteLine("\n===========Count for each code===========");
+            for (int i = 0; i < contestants.Length; i++)
+            {
+                Console.WriteLine(contestants[i] + ": " + count[i]);
+            }
+
+            // prompt user          
+            while (true)
+            {
+                char searchCode;
+                Console.WriteLine("Enter contestant code for search");
+                searchCode = Convert.ToChar(Console.ReadLine());
+                while (contestants.Contains(searchCode) == false)
+                {
+                    Console.WriteLine("code not valid, Please input again");
+                    Console.WriteLine("Enter contestant code");
+                    searchCode = Convert.ToChar(Console.ReadLine());
+                }
+
+                // find index of code
+                int index = Array.IndexOf(contestants, searchCode);
+
+                // display list of contestants with selected code
+                Console.WriteLine("The contestants list for code " + searchCode);
+                for (int i = 0; i < groupByCode[index].Count; i++)
+                {
+                    Console.WriteLine(groupByCode[index][i]);
+                }
+            }
+
+        }
+    }
+
+}
